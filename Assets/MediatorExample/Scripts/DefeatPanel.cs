@@ -1,12 +1,14 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 [RequireComponent(typeof(Button))]
 public class DefeatPanel : MonoBehaviour
 {
-    [SerializeField] private Button _restart;
+    public event Action ClickedRestartLevel;
 
-    private GameplayMediator _mediator;
+    [SerializeField] private Button _restart;
 
     private void OnEnable()
     {
@@ -18,11 +20,8 @@ public class DefeatPanel : MonoBehaviour
         _restart.onClick.RemoveListener(OnRestartClick);
     }
 
-    public void Initialize(GameplayMediator mediator)
-        => _mediator = mediator;
-
     public void Show() => gameObject.SetActive(true);
     public void Hide() => gameObject.SetActive(false);
 
-    private void OnRestartClick() => _mediator.RestartLevel();
+    private void OnRestartClick() => ClickedRestartLevel?.Invoke();
 }
